@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Carrera Matemática</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f0f4f8;min-height:100vh;padding:1rem;color:#1a1a1a}
+h1.game-title{font-size:24px;font-weight:700;text-align:center;color:#1a1a1a;margin-bottom:3px;letter-spacing:-0.5px}
+.subtitle{font-size:13px;color:#666;text-align:center;margin-bottom:1.2rem}
+
+#setup{background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:1.4rem;max-width:700px;margin:0 auto}
+.setup-row{margin-bottom:1rem}
+.setup-row label{font-size:13px;color:#555;display:block;margin-bottom:5px;font-weight:600}
+.btn-group{display:flex;gap:6px;flex-wrap:wrap}
+.tog-btn{padding:6px 13px;font-size:13px;border:1px solid #d1d5db;border-radius:8px;background:#fff;color:#555;cursor:pointer;transition:all .15s}
+.tog-btn:hover{border-color:#93c5fd;color:#1d4ed8}
+.tog-btn.active{background:#eff6ff;border-color:#3b82f6;color:#1d4ed8;font-weight:600}
+.names-grid{display:grid;gap:10px}
+.pcard{background:#f8fafc;border-radius:10px;padding:10px;border-top:3px solid #ccc;text-align:center}
+.pcard .pav{font-size:28px;margin-bottom:4px;line-height:1}
+.pcard input{width:100%;padding:5px 8px;font-size:13px;border:1px solid #d1d5db;border-radius:7px;background:#fff;color:#1a1a1a;text-align:center;outline:none;margin-top:6px}
+.pcard input:focus{border-color:#3b82f6}
+.emoji-picker{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-bottom:4px}
+.emoji-opt{font-size:20px;width:32px;height:32px;border:2px solid transparent;border-radius:8px;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0}
+.emoji-opt:hover{background:#e0f2fe;border-color:#7dd3fc}
+.emoji-opt.selected{background:#dbeafe;border-color:#3b82f6;transform:scale(1.15)}
+.start-btn{width:100%;padding:11px;background:#2563eb;color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px;transition:background .15s}
+.start-btn:hover{background:#1d4ed8}
+
+#race-screen{display:none;max-width:1020px;margin:0 auto}
+.track-wrap{background:#1e4d0f;border-radius:12px;padding:10px 12px 8px;margin-bottom:1rem}
+.track-inner{background:#c8a96e;border-radius:7px;padding:4px 0;position:relative}
+.t-startline{position:absolute;left:62px;top:0;bottom:0;width:2px;background:rgba(255,255,255,.7);z-index:2}
+.t-finishline{position:absolute;right:12px;top:0;bottom:0;width:5px;z-index:2;background:repeating-linear-gradient(to bottom,#fff 0,#fff 6px,#222 6px,#222 12px)}
+.t-flag{position:absolute;right:17px;top:-8px;font-size:14px;z-index:3}
+.lane{display:flex;align-items:center;height:50px;position:relative;border-top:1px dashed rgba(255,255,255,.2)}
+.lane:first-child{border-top:none}
+.lane-lbl{position:absolute;left:0;width:60px;text-align:center;font-size:10px;font-weight:700;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.8);z-index:3;line-height:1.3;padding:0 2px}
+.prog-bg{position:absolute;left:64px;right:16px;height:5px;background:rgba(0,0,0,.18);border-radius:3px;bottom:7px}
+.prog-bar{height:100%;border-radius:3px;transition:width .55s ease}
+.runner-svg{position:absolute;left:64px;width:34px;height:34px;transition:left .55s cubic-bezier(.34,1.2,.64,1);z-index:5;top:7px;font-size:26px;display:flex;align-items:center;justify-content:center;line-height:1}
+.runner-svg.bounce{animation:boing .35s ease}
+.runner-svg.goback{animation:goback .4s ease}
+@keyframes boing{0%{transform:scale(1)}40%{transform:scale(1.4) translateY(-6px)}100%{transform:scale(1)}}
+@keyframes goback{0%{transform:scale(1)}35%{transform:scale(.75) translateY(5px) rotate(-10deg)}100%{transform:scale(1)}}
+
+.q-grid{display:grid;gap:10px;margin-bottom:1rem}
+.q-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;transition:border-color .2s,background .2s}
+.q-card.solved{border-color:#22c55e;background:#f0fdf4}
+.q-card.wrong-flash{border-color:#ef4444;background:#fef2f2}
+.q-header{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.q-avatar{font-size:17px}
+.q-pname{font-size:13px;font-weight:600;color:#1a1a1a;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600}
+.badge-wait{background:#f1f5f9;color:#64748b}
+.badge-ok{background:#dcfce7;color:#166534}
+.badge-err{background:#fee2e2;color:#991b1b}
+.q-score{font-size:11px;color:#888;font-weight:600;margin-bottom:7px}
+.q-text{font-size:15px;font-weight:600;color:#1a1a1a;min-height:36px;margin-bottom:9px;line-height:1.4}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.opt-btn{padding:7px 9px;font-size:13px;border:1px solid #d1d5db;border-radius:8px;background:#f8fafc;color:#1a1a1a;cursor:pointer;text-align:left;transition:all .15s;font-weight:500;line-height:1.3}
+.opt-btn:hover:not(:disabled){border-color:#3b82f6;background:#eff6ff;color:#1d4ed8}
+.opt-btn:disabled{cursor:not-allowed}
+.opt-btn.correct{background:#dcfce7!important;border-color:#22c55e!important;color:#166534!important;font-weight:700}
+.opt-btn.wrong{background:#fee2e2!important;border-color:#ef4444!important;color:#991b1b!important}
+.q-feedback{font-size:11px;min-height:16px;font-weight:600;line-height:1.4}
+.fb-ok{color:#16a34a}
+.fb-err{color:#dc2626}
+
+#winner-screen{display:none;text-align:center;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:2.4rem;max-width:420px;margin:0 auto}
+.w-av{font-size:56px;animation:cel .7s ease-in-out infinite alternate}
+@keyframes cel{0%{transform:scale(1) rotate(-7deg)}100%{transform:scale(1.18) rotate(7deg)}}
+.w-title{font-size:22px;font-weight:700;color:#1a1a1a;margin:10px 0 4px}
+.w-sub{font-size:14px;color:#666;margin-bottom:1.4rem}
+.again-btn{padding:10px 28px;background:#2563eb;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}
+.again-btn:hover{background:#1d4ed8}
+
+@media(max-width:620px){.options-grid{grid-template-columns:1fr}.q-grid{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+
+<h1 class="game-title">🏁 Carrera Matemática</h1>
+<p class="subtitle">Responde bien para avanzar — si fallas, tu corredor retrocede un paso</p>
+
+<div id="setup">
+  <div class="setup-row">
+    <label>Número de jugadores</label>
+    <div class="btn-group">
+      <button class="tog-btn" data-n="2" onclick="setNP(2)">2 jugadores</button>
+      <button class="tog-btn active" data-n="3" onclick="setNP(3)">3 jugadores</button>
+    </div>
+  </div>
+  <div class="setup-row">
+    <label>Tema matemático</label>
+    <div class="btn-group" id="topic-grp">
+      <button class="tog-btn active" data-t="suma_resta"     onclick="setT(this)">Suma y resta</button>
+      <button class="tog-btn"        data-t="multiplicacion" onclick="setT(this)">Multiplicación</button>
+      <button class="tog-btn"        data-t="fracciones"     onclick="setT(this)">Fracciones</button>
+      <button class="tog-btn"        data-t="ecuaciones"     onclick="setT(this)">Ecuaciones</button>
+      <button class="tog-btn"        data-t="potencias"      onclick="setT(this)">Potencias</button>
+      <button class="tog-btn"        data-t="porcentajes"    onclick="setT(this)">Porcentajes</button>
+    </div>
+  </div>
+  <div class="setup-row">
+    <label>Nombres de los jugadores</label>
+    <div class="names-grid" id="names-grid"></div>
+  </div>
+  <button class="start-btn" onclick="startGame()">¡Comenzar carrera! 🏃</button>
+</div>
+
+<div id="race-screen">
+  <div class="track-wrap">
+    <div class="track-inner" id="track">
+      <div class="t-startline"></div>
+      <div class="t-finishline"></div>
+      <div class="t-flag">🏁</div>
+    </div>
+  </div>
+  <div class="q-grid" id="q-grid"></div>
+</div>
+
+<div id="winner-screen">
+  <div class="w-av"   id="w-av"></div>
+  <div class="w-title" id="w-title"></div>
+  <div class="w-sub"   id="w-sub"></div>
+  <button class="again-btn" onclick="resetGame()">Jugar de nuevo</button>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   BASE DE DATOS — 20 preguntas por categoría
+   { p: pregunta, opts: [A,B,C,D], ans: "A"|"B"|"C"|"D" }
+══════════════════════════════════════════════════════ */
+const DB = {
+  suma_resta:[
+    {p:"¿Cuánto es 47 + 38?",            opts:["75","85","84","76"],         ans:"B"},
+    {p:"¿Cuánto es 93 − 57?",            opts:["36","34","46","38"],         ans:"A"},
+    {p:"¿Cuánto es 125 + 246?",          opts:["361","371","381","351"],     ans:"B"},
+    {p:"¿Cuánto es 500 − 183?",          opts:["327","317","307","337"],     ans:"B"},
+    {p:"¿Cuánto es 64 + 79?",            opts:["133","143","153","123"],     ans:"B"},
+    {p:"¿Cuánto es 1000 − 374?",         opts:["626","636","624","646"],     ans:"A"},
+    {p:"¿Cuánto es 38 + 47 + 15?",       opts:["90","100","95","105"],       ans:"B"},
+    {p:"¿Cuánto es 200 − 88?",           opts:["112","122","102","118"],     ans:"A"},
+    {p:"¿Cuánto es 456 + 378?",          opts:["824","834","814","844"],     ans:"B"},
+    {p:"¿Cuánto es 750 − 296?",          opts:["444","454","464","434"],     ans:"B"},
+    {p:"¿Cuánto es 99 + 99?",            opts:["188","196","198","200"],     ans:"C"},
+    {p:"¿Cuánto es 600 − 255?",          opts:["335","345","355","325"],     ans:"B"},
+    {p:"¿Cuánto es 17 + 28 + 35?",       opts:["70","80","75","85"],         ans:"B"},
+    {p:"¿Cuánto es 1234 − 567?",         opts:["667","677","657","687"],     ans:"A"},
+    {p:"¿Cuánto es 85 + 76 + 39?",       opts:["190","200","195","205"],     ans:"B"},
+    {p:"¿Cuánto es 5000 − 1234?",        opts:["3766","3756","3776","3746"],  ans:"A"},
+    {p:"¿Cuánto es 48 + 52 + 100?",      opts:["190","200","195","210"],     ans:"B"},
+    {p:"¿Cuánto es 300 − 147?",          opts:["153","163","143","173"],     ans:"A"},
+    {p:"¿Cuánto es 999 + 1?",            opts:["998","999","1000","1001"],   ans:"C"},
+    {p:"¿Cuánto es 2500 − 875?",         opts:["1625","1635","1615","1645"], ans:"A"}
+  ],
+  multiplicacion:[
+    {p:"¿Cuánto es 7 × 8?",              opts:["54","56","58","52"],         ans:"B"},
+    {p:"¿Cuánto es 12 × 9?",             opts:["98","108","106","118"],      ans:"B"},
+    {p:"¿Cuánto es 15 × 6?",             opts:["80","90","85","95"],         ans:"B"},
+    {p:"¿Cuánto es 24 ÷ 6?",             opts:["3","5","4","6"],             ans:"C"},
+    {p:"¿Cuánto es 13 × 13?",            opts:["159","169","179","149"],     ans:"B"},
+    {p:"¿Cuánto es 144 ÷ 12?",           opts:["10","14","13","12"],         ans:"D"},
+    {p:"¿Cuánto es 25 × 4?",             opts:["90","100","110","80"],       ans:"B"},
+    {p:"¿Cuánto es 84 ÷ 7?",             opts:["11","12","13","14"],         ans:"B"},
+    {p:"¿Cuánto es 16 × 7?",             opts:["112","102","122","108"],     ans:"A"},
+    {p:"¿Cuánto es 256 ÷ 8?",            opts:["28","30","32","34"],         ans:"C"},
+    {p:"¿Cuánto es 45 × 3?",             opts:["125","135","115","145"],     ans:"B"},
+    {p:"¿Cuánto es 72 ÷ 9?",             opts:["7","9","8","6"],             ans:"C"},
+    {p:"¿Cuánto es 18 × 11?",            opts:["188","198","178","208"],     ans:"B"},
+    {p:"¿Cuánto es 350 ÷ 5?",            opts:["60","70","80","65"],         ans:"B"},
+    {p:"¿Cuánto es 32 × 5?",             opts:["150","160","170","140"],     ans:"B"},
+    {p:"¿Cuánto es 120 ÷ 4?",            opts:["25","30","35","40"],         ans:"B"},
+    {p:"¿Cuánto es 14 × 14?",            opts:["186","194","196","198"],     ans:"C"},
+    {p:"¿Cuánto es 480 ÷ 6?",            opts:["70","80","75","85"],         ans:"B"},
+    {p:"¿Cuánto es 23 × 7?",             opts:["151","161","141","171"],     ans:"B"},
+    {p:"¿Cuánto es 625 ÷ 25?",           opts:["20","25","30","15"],         ans:"B"}
+  ],
+  fracciones:[
+    {p:"¿Cuánto es 1/2 + 1/4?",          opts:["2/6","3/4","4/6","1/4"],    ans:"B"},
+    {p:"¿Cuánto es 3/4 − 1/4?",          opts:["2/8","2/4","3/8","1/4"],    ans:"B"},
+    {p:"¿Cuánto es 2/3 + 1/6?",          opts:["3/9","5/6","4/6","3/6"],    ans:"B"},
+    {p:"¿Cuánto es 1/2 × 2/3?",          opts:["2/5","1/3","3/4","2/6"],    ans:"B"},
+    {p:"¿Cuánto es 3/4 ÷ 3/8?",          opts:["1","9/32","2","6/8"],       ans:"C"},
+    {p:"¿Cuánto es 5/6 − 1/3?",          opts:["4/6","1/2","4/3","1/6"],    ans:"B"},
+    {p:"¿Cuánto es 2/5 + 3/10?",         opts:["5/15","7/10","1/2","4/10"], ans:"B"},
+    {p:"¿Cuánto es 4/5 × 5/8?",          opts:["20/13","1/2","9/13","4/8"], ans:"B"},
+    {p:"¿Cuál fracción es mayor?",        opts:["2/3","3/4","Son iguales","No se puede comparar"], ans:"B"},
+    {p:"¿Cuánto es 7/8 − 3/8?",          opts:["4/16","4/0","4/8","1/2"],   ans:"C"},
+    {p:"¿Cuánto es 1/3 + 1/3 + 1/3?",   opts:["3/9","3/3","1","B y C son iguales"], ans:"D"},
+    {p:"¿Cuánto es 3/5 de 20?",          opts:["10","12","15","8"],          ans:"B"},
+    {p:"¿Cuánto es 1/4 de 100?",         opts:["20","25","40","50"],         ans:"B"},
+    {p:"¿Cuánto es 2/3 de 90?",          opts:["45","60","30","75"],         ans:"B"},
+    {p:"¿Cuál es equivalente a 3/4?",    opts:["6/8","9/16","12/14","6/9"], ans:"A"},
+    {p:"¿Cuánto es 5/6 + 1/6?",          opts:["6/12","5/36","6/6","1"],    ans:"D"},
+    {p:"¿Cuánto es 7/10 − 2/5?",         opts:["5/5","3/10","5/10","1/2"], ans:"B"},
+    {p:"¿Cuánto es 1/2 ÷ 1/4?",          opts:["1/8","4","2","1/4"],        ans:"C"},
+    {p:"¿Cuánto es 3/8 + 5/8?",          opts:["8/16","15/64","8/8","1"],   ans:"D"},
+    {p:"Simplifica 12/16",               opts:["3/4","6/9","2/3","4/5"],    ans:"A"}
+  ],
+  ecuaciones:[
+    {p:"Si x + 5 = 12, ¿cuánto es x?",        opts:["6","7","8","17"],       ans:"B"},
+    {p:"Si 3x = 21, ¿cuánto es x?",           opts:["6","7","8","9"],        ans:"B"},
+    {p:"Si x − 8 = 15, ¿cuánto es x?",        opts:["7","23","6","24"],      ans:"B"},
+    {p:"Si 2x + 3 = 11, ¿cuánto es x?",       opts:["3","4","5","7"],        ans:"B"},
+    {p:"Si x/4 = 9, ¿cuánto es x?",           opts:["13","36","45","4"],     ans:"B"},
+    {p:"Si 5x − 10 = 20, ¿cuánto es x?",      opts:["2","4","6","8"],        ans:"C"},
+    {p:"Si 4x + 8 = 32, ¿cuánto es x?",       opts:["5","6","7","8"],        ans:"B"},
+    {p:"Si 2(x + 3) = 14, ¿cuánto es x?",     opts:["3","4","5","7"],        ans:"B"},
+    {p:"Si x/3 + 2 = 7, ¿cuánto es x?",       opts:["9","15","12","18"],     ans:"B"},
+    {p:"Si 6x − 6 = 30, ¿cuánto es x?",       opts:["4","5","6","7"],        ans:"C"},
+    {p:"Si 3x + 2x = 25, ¿cuánto es x?",      opts:["4","5","6","3"],        ans:"B"},
+    {p:"Si 10 − x = 3, ¿cuánto es x?",        opts:["6","7","8","13"],       ans:"B"},
+    {p:"Si 2x − 7 = 13, ¿cuánto es x?",       opts:["8","10","12","3"],      ans:"B"},
+    {p:"Si x + x + 4 = 20, ¿cuánto es x?",    opts:["6","7","8","10"],       ans:"C"},
+    {p:"Si 3(x − 2) = 12, ¿cuánto es x?",     opts:["4","5","6","7"],        ans:"C"},
+    {p:"Si 7x = 49, ¿cuánto es x?",           opts:["6","7","8","9"],        ans:"B"},
+    {p:"Si x/5 = 8, ¿cuánto es x?",           opts:["13","40","35","45"],    ans:"B"},
+    {p:"Si 4x − 3 = 25, ¿cuánto es x?",       opts:["5","6","7","8"],        ans:"C"},
+    {p:"Si 2x + 5x = 42, ¿cuánto es x?",      opts:["5","6","7","8"],        ans:"B"},
+    {p:"Si 9 + 2x = 27, ¿cuánto es x?",       opts:["7","9","10","18"],      ans:"B"}
+  ],
+  potencias:[
+    {p:"¿Cuánto es 2³?",             opts:["6","8","9","4"],               ans:"B"},
+    {p:"¿Cuánto es 5²?",             opts:["10","20","25","15"],           ans:"C"},
+    {p:"¿Cuánto es 3⁴?",             opts:["12","64","81","27"],           ans:"C"},
+    {p:"¿Cuánto es √64?",            opts:["6","7","8","9"],               ans:"C"},
+    {p:"¿Cuánto es √144?",           opts:["11","12","13","14"],           ans:"B"},
+    {p:"¿Cuánto es 10³?",            opts:["30","100","1000","300"],       ans:"C"},
+    {p:"¿Cuánto es 4³?",             opts:["12","48","64","16"],           ans:"C"},
+    {p:"¿Cuánto es √225?",           opts:["13","14","15","16"],           ans:"C"},
+    {p:"¿Cuánto es 2⁵?",             opts:["10","16","32","64"],           ans:"C"},
+    {p:"¿Cuánto es 6²?",             opts:["12","30","36","42"],           ans:"C"},
+    {p:"¿Cuánto es √400?",           opts:["18","20","22","25"],           ans:"B"},
+    {p:"¿Cuánto es 7²?",             opts:["14","42","49","56"],           ans:"C"},
+    {p:"¿Cuánto es 2¹⁰?",            opts:["20","512","1024","2048"],      ans:"C"},
+    {p:"¿Cuánto es √81?",            opts:["7","8","9","10"],              ans:"C"},
+    {p:"¿Cuánto es 3³?",             opts:["9","18","27","81"],            ans:"C"},
+    {p:"¿Cuánto es 100²?",           opts:["200","1000","10000","100"],    ans:"C"},
+    {p:"¿Cuánto es √49?",            opts:["5","6","7","8"],               ans:"C"},
+    {p:"¿Cuánto es 5³?",             opts:["15","25","125","625"],         ans:"C"},
+    {p:"¿Cuánto es √169?",           opts:["11","12","13","14"],           ans:"C"},
+    {p:"¿Cuánto es 2⁸?",             opts:["64","128","256","512"],        ans:"C"}
+  ],
+  porcentajes:[
+    {p:"¿Cuánto es el 50% de 200?",               opts:["50","80","100","120"],      ans:"C"},
+    {p:"¿Cuánto es el 25% de 80?",                opts:["15","20","25","40"],        ans:"B"},
+    {p:"¿Cuánto es el 10% de 350?",               opts:["30","35","40","45"],        ans:"B"},
+    {p:"¿Cuánto es el 75% de 120?",               opts:["80","85","90","95"],        ans:"C"},
+    {p:"¿Cuánto es el 20% de 500?",               opts:["80","100","120","60"],      ans:"B"},
+    {p:"¿Cuánto es el 30% de 90?",                opts:["24","27","30","33"],        ans:"B"},
+    {p:"¿Cuánto es el 15% de 200?",               opts:["25","30","35","40"],        ans:"B"},
+    {p:"Si 40 es el 80% de X, ¿cuánto es X?",     opts:["40","50","45","60"],        ans:"B"},
+    {p:"¿Cuánto es el 5% de 1000?",               opts:["40","50","55","45"],        ans:"B"},
+    {p:"¿Qué % es 30 de 120?",                    opts:["20%","25%","30%","15%"],    ans:"B"},
+    {p:"¿Cuánto es el 60% de 150?",               opts:["80","85","90","95"],        ans:"C"},
+    {p:"¿Qué % es 45 de 180?",                    opts:["20%","25%","30%","15%"],    ans:"B"},
+    {p:"¿Cuánto es el 35% de 200?",               opts:["60","65","70","75"],        ans:"C"},
+    {p:"Si 25 es el 50% de X, ¿cuánto es X?",     opts:["45","50","55","75"],        ans:"B"},
+    {p:"¿Cuánto es el 100% de 378?",              opts:["37.8","3780","378","1"],    ans:"C"},
+    {p:"¿Cuánto es el 12% de 300?",               opts:["30","36","42","48"],        ans:"B"},
+    {p:"¿Qué % es 15 de 60?",                     opts:["20%","25%","30%","15%"],    ans:"B"},
+    {p:"Descuento del 20% en $150, ¿cuánto pagas?",opts:["$110","$120","$130","$140"],ans:"B"},
+    {p:"¿Cuánto es el 8% de 250?",                opts:["16","18","20","24"],        ans:"C"},
+    {p:"40 alumnos, 25% son niñas. ¿Cuántas?",    opts:["8","10","12","15"],         ans:"B"}
+  ]
+};
+
+const ANIMALS  = ['🐶','🐱','🐸','🐯','🦊','🐼','🐨','🦁','🐮','🐧'];
+const DEF_AVATARS = ['🐶','🐱','🐸'];
+const COLORS   = ['#2563eb','#16a34a','#ea580c'];
+const LABELS   = ['A','B','C','D'];
+const TRACK_LEN = 10;
+
+let numP = 3, topic = 'suma_resta';
+let players = [], gameActive = false, usedQ = {};
+
+function svgRunner(color){
+  return `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="5" r="3.2" fill="${color}"/>
+    <line x1="22" y1="8.2" x2="14" y2="18" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="14" y1="18" x2="8"  y2="26" stroke="${color}" stroke-width="2.2" stroke-linecap="round"/>
+    <line x1="14" y1="18" x2="20" y2="27" stroke="${color}" stroke-width="2.2" stroke-linecap="round"/>
+    <line x1="22" y1="8.2" x2="28" y2="13" stroke="${color}" stroke-width="2.2" stroke-linecap="round"/>
+    <line x1="22" y1="8.2" x2="16" y2="12" stroke="${color}" stroke-width="2.2" stroke-linecap="round"/>
+    <line x1="28" y1="13" x2="26" y2="18" stroke="${color}" stroke-width="1.8" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function setNP(n){
+  numP = n;
+  document.querySelectorAll('[data-n]').forEach(b => b.classList.toggle('active', +b.dataset.n === n));
+  buildNamesGrid();
+}
+function setT(el){
+  topic = el.dataset.t;
+  document.querySelectorAll('#topic-grp .tog-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+function buildNamesGrid(){
+  const g = document.getElementById('names-grid');
+  g.style.gridTemplateColumns = `repeat(${numP},1fr)`;
+  g.innerHTML = '';
+  ['Jugador 1','Jugador 2','Jugador 3'].slice(0,numP).forEach((d,i) => {
+    const sel = DEF_AVATARS[i];
+    const opts = ANIMALS.map((em,ei) =>
+      `<button class="emoji-opt${em===sel?' selected':''}" onclick="selectEmoji(${i},this,'${em}')">${em}</button>`
+    ).join('');
+    g.innerHTML += `<div class="pcard" style="border-top-color:${COLORS[i]}">
+      <div class="pav" id="pav-${i}">${sel}</div>
+      <div class="emoji-picker">${opts}</div>
+      <input type="text" id="pn-${i}" placeholder="${d}"/>
+    </div>`;
+  });
+}
+function selectEmoji(i, btn, em){
+  document.getElementById(`pav-${i}`).textContent = em;
+  const picker = btn.closest('.emoji-picker');
+  picker.querySelectorAll('.emoji-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+buildNamesGrid(); setNP(3);
+
+function pickQ(i){
+  const pool = DB[topic];
+  if(!usedQ[i]) usedQ[i] = new Set();
+  if(usedQ[i].size >= pool.length) usedQ[i].clear();
+  let idx;
+  let t = 0;
+  do { idx = Math.floor(Math.random() * pool.length); t++; }
+  while(usedQ[i].has(idx) && t < 50);
+  usedQ[i].add(idx);
+  return { ...pool[idx] };
+}
+
+function startGame(){
+  players = []; usedQ = {};
+  for(let i = 0; i < numP; i++){
+    const v  = (document.getElementById(`pn-${i}`).value||'').trim() || `Jugador ${i+1}`;
+    const av = document.getElementById(`pav-${i}`).textContent || DEF_AVATARS[i];
+    players.push({ name:v, avatar:av, color:COLORS[i], pos:0, correct:0, wrong:0, answered:false, currentQ:null });
+  }
+  gameActive = true;
+  document.getElementById('setup').style.display      = 'none';
+  document.getElementById('race-screen').style.display = 'block';
+  buildTrack();
+  buildQGrid();
+  players.forEach((_,i) => showQuestion(i));
+}
+
+function buildTrack(){
+  const track = document.getElementById('track');
+  track.querySelectorAll('.lane').forEach(l => l.remove());
+  players.forEach((p,i) => {
+    const lane = document.createElement('div');
+    lane.className = 'lane'; lane.id = `lane-${i}`;
+    lane.innerHTML = `
+      <span class="lane-lbl">${p.name.substring(0,7)}</span>
+      <div class="prog-bg"><div class="prog-bar" id="prog-${i}" style="width:0%;background:${p.color}"></div></div>
+      <div class="runner-svg" id="runner-${i}">${p.avatar}</div>`;
+    track.appendChild(lane);
+  });
+}
+
+function updateRunner(i){
+  const track  = document.getElementById('track');
+  const totalW = track.offsetWidth - 84;
+  const safePos = Math.max(0, Math.min(players[i].pos, TRACK_LEN));
+  const px  = 64 + (safePos / TRACK_LEN) * totalW;
+  document.getElementById(`runner-${i}`).style.left = px + 'px';
+  document.getElementById(`prog-${i}`).style.width  = (safePos / TRACK_LEN * 100) + '%';
+}
+
+function buildQGrid(){
+  const g = document.getElementById('q-grid');
+  g.style.gridTemplateColumns = `repeat(${numP},1fr)`;
+  g.innerHTML = '';
+  players.forEach((p,i) => {
+    g.innerHTML += `<div class="q-card" id="qcard-${i}" style="border-top:3px solid ${p.color}">
+      <div class="q-header">
+        <span class="q-avatar">${p.avatar}</span>
+        <span class="q-pname">${p.name}</span>
+        <span class="q-badge badge-wait" id="badge-${i}">en juego</span>
+      </div>
+      <div class="q-score" id="qscore-${i}">✓ 0 &nbsp; ✗ 0 &nbsp;|&nbsp; paso 0/${TRACK_LEN}</div>
+      <div class="q-text"  id="qt-${i}"></div>
+      <div class="options-grid" id="opts-${i}"></div>
+      <div class="q-feedback" id="qf-${i}"></div>
+    </div>`;
+  });
+}
+
+function showQuestion(i){
+  if(!gameActive) return;
+  const q = pickQ(i);
+  players[i].currentQ = q;
+  players[i].answered = false;
+
+  document.getElementById(`qt-${i}`).textContent = q.p;
+  document.getElementById(`qf-${i}`).textContent = '';
+  const card = document.getElementById(`qcard-${i}`);
+  card.className = 'q-card';
+  card.style.borderTop = `3px solid ${players[i].color}`;
+
+  const badge = document.getElementById(`badge-${i}`);
+  badge.textContent = 'en juego'; badge.className = 'q-badge badge-wait';
+
+  const od = document.getElementById(`opts-${i}`);
+  od.innerHTML = '';
+  q.opts.forEach((opt,oi) => {
+    const btn = document.createElement('button');
+    btn.className  = 'opt-btn';
+    btn.textContent = `${LABELS[oi]}. ${opt}`;
+    btn.onclick = () => handleAnswer(i, LABELS[oi]);
+    od.appendChild(btn);
+  });
+  updateScore(i);
+}
+
+function updateScore(i){
+  document.getElementById(`qscore-${i}`).innerHTML =
+    `✓ ${players[i].correct} &nbsp; ✗ ${players[i].wrong} &nbsp;|&nbsp; paso ${Math.max(0,players[i].pos)}/${TRACK_LEN}`;
+}
+
+function handleAnswer(i, chosen){
+  if(!gameActive || players[i].answered) return;
+  players[i].answered = true;
+
+  const q    = players[i].currentQ;
+  const opts = document.getElementById(`opts-${i}`).querySelectorAll('.opt-btn');
+  opts.forEach(b => b.disabled = true);
+
+  const correctIdx = LABELS.indexOf(q.ans);
+  const chosenIdx  = LABELS.indexOf(chosen);
+  opts[correctIdx].classList.add('correct');
+
+  const card  = document.getElementById(`qcard-${i}`);
+  const badge = document.getElementById(`badge-${i}`);
+  const fb    = document.getElementById(`qf-${i}`);
+  const runner = document.getElementById(`runner-${i}`);
+
+  if(chosen === q.ans){
+    players[i].correct++;
+    players[i].pos++;
+    fb.textContent = '¡Correcto! Avanzas un paso 🎉';
+    fb.className   = 'q-feedback fb-ok';
+    card.className = 'q-card solved';
+    card.style.borderTop = `3px solid ${players[i].color}`;
+    badge.textContent = 'correcto ✓'; badge.className = 'q-badge badge-ok';
+    runner.classList.add('bounce');
+    setTimeout(() => runner.classList.remove('bounce'), 380);
+    updateRunner(i); updateScore(i);
+    if(players[i].pos >= TRACK_LEN){ showWinner(i); return; }
+    setTimeout(() => showQuestion(i), 1600);
+  } else {
+    players[i].wrong++;
+    players[i].pos = Math.max(0, players[i].pos - 1);
+    opts[chosenIdx].classList.add('wrong');
+    fb.textContent = `Incorrecto — retrocedes un paso 😬  (Era: ${LABELS[correctIdx]}. ${q.opts[correctIdx]})`;
+    fb.className   = 'q-feedback fb-err';
+    card.className = 'q-card wrong-flash';
+    card.style.borderTop = `3px solid ${players[i].color}`;
+    badge.textContent = 'incorrecto ✗'; badge.className = 'q-badge badge-err';
+    runner.classList.add('goback');
+    setTimeout(() => runner.classList.remove('goback'), 420);
+    updateRunner(i); updateScore(i);
+    setTimeout(() => showQuestion(i), 2100);
+  }
+}
+
+function showWinner(idx){
+  gameActive = false;
+  document.getElementById('race-screen').style.display = 'none';
+  const ws = document.getElementById('winner-screen');
+  ws.style.display = 'block';
+  document.getElementById('w-av').textContent    = players[idx].avatar;
+  document.getElementById('w-title').textContent = `¡${players[idx].name} ganó la carrera!`;
+  document.getElementById('w-sub').textContent   =
+    `Llegó a la meta con ${players[idx].correct} respuestas correctas y ${players[idx].wrong} incorrectas. ¡Felicitaciones!`;
+}
+
+function resetGame(){
+  gameActive = false;
+  document.getElementById('winner-screen').style.display = 'none';
+  document.getElementById('race-screen').style.display   = 'none';
+  document.getElementById('setup').style.display         = 'block';
+}
+</script>
+</body>
+</html>
