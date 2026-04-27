@@ -8,26 +8,21 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;background:#f0f4f8;min-height:100vh;padding:1rem;color:#1a1a1a}
 
-/* ── ENCABEZADO ── */
+/* ENCABEZADO */
 .header-wrap{display:flex;align-items:center;justify-content:center;gap:14px;max-width:900px;margin:0 auto 1.2rem;background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:12px 20px}
-.header-logo{flex-shrink:0}
 .header-text{text-align:center}
 h1.game-title{font-size:22px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px;line-height:1.2;text-align:center}
 .inst-name{font-size:11px;font-weight:600;color:#2563eb;margin-top:3px;line-height:1.35;text-align:center}
 .lab-name{font-size:12px;font-weight:700;color:#059669;margin-top:3px;letter-spacing:0.2px;text-align:center}
 
-/* ── SETUP ── */
+/* SETUP */
 #setup{background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:1.4rem;max-width:900px;margin:0 auto}
-.setup-options{display:flex;gap:1.2rem;margin-bottom:1rem}
-.setup-col{flex:1}
 .setup-row{margin-bottom:1rem}
 .setup-row label{font-size:13px;color:#555;display:block;margin-bottom:5px;font-weight:600}
 .btn-group{display:flex;gap:6px;flex-wrap:wrap}
 .tog-btn{padding:6px 13px;font-size:13px;border:1px solid #d1d5db;border-radius:8px;background:#fff;color:#555;cursor:pointer;transition:all .15s}
 .tog-btn:hover{border-color:#93c5fd;color:#1d4ed8}
 .tog-btn.active{background:#eff6ff;border-color:#3b82f6;color:#1d4ed8;font-weight:600}
-
-/* ── TARJETAS JUGADORES (siempre horizontal) ── */
 .names-grid{display:flex;gap:10px}
 .pcard{background:#f8fafc;border-radius:10px;padding:10px;border-top:3px solid #ccc;text-align:center;flex:1}
 .pcard input{width:100%;padding:5px 8px;font-size:13px;border:1px solid #d1d5db;border-radius:7px;background:#fff;color:#1a1a1a;text-align:center;outline:none;margin-top:6px}
@@ -39,7 +34,19 @@ h1.game-title{font-size:22px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px
 .start-btn{width:100%;padding:11px;background:#2563eb;color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px;transition:background .15s}
 .start-btn:hover{background:#1d4ed8}
 
-/* ── PISTA ── */
+/* BOTÓN REINICIAR */
+.reset-top-btn{position:fixed;top:14px;left:14px;z-index:999;padding:7px 13px;background:#fff;border:1.5px solid #d1d5db;border-radius:9px;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;display:none;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,.10);transition:all .15s}
+.reset-top-btn:hover{border-color:#ef4444;color:#ef4444;background:#fff5f5}
+
+/* RELOJ */
+.clock-bar{display:flex;align-items:center;justify-content:center;gap:10px;max-width:900px;margin:0 auto .8rem}
+.clock-display{font-size:28px;font-weight:900;color:#1a3a6b;letter-spacing:2px;font-variant-numeric:tabular-nums;background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:6px 20px;min-width:110px;text-align:center;transition:color .3s,border-color .3s}
+.clock-display.warning{color:#f59e0b;border-color:#f59e0b;animation:pulse-warn .8s ease infinite alternate}
+.clock-display.danger{color:#ef4444;border-color:#ef4444;animation:pulse-warn .4s ease infinite alternate}
+@keyframes pulse-warn{0%{transform:scale(1)}100%{transform:scale(1.04)}}
+.clock-label{font-size:12px;color:#888;font-weight:600}
+
+/* PISTA */
 #race-screen{display:none;max-width:900px;margin:0 auto}
 .track-wrap{background:#1e4d0f;border-radius:12px;padding:10px 12px 8px;margin-bottom:1rem}
 .track-inner{background:#c8a96e;border-radius:7px;padding:4px 0;position:relative}
@@ -57,7 +64,7 @@ h1.game-title{font-size:22px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px
 @keyframes boing{0%{transform:scale(1)}40%{transform:scale(1.4) translateY(-6px)}100%{transform:scale(1)}}
 @keyframes goback{0%{transform:scale(1)}35%{transform:scale(.75) translateY(5px) rotate(-10deg)}100%{transform:scale(1)}}
 
-/* ── PREGUNTAS siempre horizontal ── */
+/* PREGUNTAS */
 .q-grid{display:flex;gap:10px;margin-bottom:1rem}
 .q-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;transition:border-color .2s,background .2s;flex:1}
 .q-card.solved{border-color:#22c55e;background:#f0fdf4}
@@ -81,21 +88,37 @@ h1.game-title{font-size:22px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px
 .fb-ok{color:#16a34a}
 .fb-err{color:#dc2626}
 
-/* ── BOTÓN REINICIAR ── */
-.reset-top-btn{position:fixed;top:14px;left:14px;z-index:999;padding:7px 13px;background:#fff;border:1.5px solid #d1d5db;border-radius:9px;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;display:none;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,.10);transition:all .15s}
-.reset-top-btn:hover{border-color:#ef4444;color:#ef4444;background:#fff5f5}
-
-/* ── GANADOR ── */
-#winner-screen{display:none;text-align:center;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:2.4rem;max-width:420px;margin:0 auto}
-.w-av{font-size:56px;animation:cel .7s ease-in-out infinite alternate}
+/* GANADOR OVERLAY */
+#winner-screen{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.6);align-items:center;justify-content:center;padding:1rem}
+.winner-card{background:#fff;border-radius:20px;padding:2rem 2rem 1.8rem;max-width:520px;width:100%;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.35);position:relative;overflow:hidden}
+.winner-rainbow{position:absolute;top:0;left:0;right:0;height:7px;background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e,#3b82f6,#a855f7,#ef4444);background-size:200%;animation:rainbow 2s linear infinite}
+@keyframes rainbow{0%{background-position:0%}100%{background-position:200%}}
+.w-av{font-size:68px;animation:cel .7s ease-in-out infinite alternate;display:block;margin:8px auto .4rem}
 @keyframes cel{0%{transform:scale(1) rotate(-7deg)}100%{transform:scale(1.18) rotate(7deg)}}
-.w-title{font-size:22px;font-weight:700;color:#1a1a1a;margin:10px 0 4px}
-.w-sub{font-size:14px;color:#666;margin-bottom:1.4rem}
-.again-btn{padding:10px 28px;background:#2563eb;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}
+.w-congrats{font-size:12px;font-weight:800;color:#f59e0b;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:4px}
+.w-title{font-size:28px;font-weight:900;color:#1a1a1a;margin:6px 0 4px;line-height:1.2}
+.w-sub{font-size:13px;color:#666;margin-bottom:1.2rem}
+
+/* TABLA DE RESULTADOS */
+.results-table{width:100%;border-collapse:collapse;margin-bottom:1.4rem;border-radius:10px;overflow:hidden}
+.results-table th{background:#f1f5f9;font-size:11px;font-weight:700;color:#64748b;padding:7px 12px;text-align:left;letter-spacing:.5px;text-transform:uppercase}
+.results-table td{padding:9px 12px;font-size:14px;border-top:1px solid #f1f5f9;text-align:left}
+.results-table tr.winner-row td{background:#fffbeb;font-weight:700}
+.score-bar-wrap{display:flex;align-items:center;gap:7px}
+.score-bar-bg{flex:1;height:8px;background:#f1f5f9;border-radius:4px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:4px;transition:width .8s ease}
+.score-num{font-size:13px;font-weight:800;min-width:36px;text-align:right}
+
+.again-btn{padding:11px 34px;background:#2563eb;color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s}
 .again-btn:hover{background:#1d4ed8}
 </style>
 </head>
 <body>
+
+<!-- MÚSICA DE FONDO -->
+<audio id="bgm" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"/>
+</audio>
 
 <!-- ENCABEZADO -->
 <div class="header-wrap">
@@ -109,23 +132,26 @@ h1.game-title{font-size:22px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px
   </div>
 </div>
 
+<!-- BOTÓN REINICIAR -->
+<button class="reset-top-btn" id="reset-top-btn" onclick="resetGame()">↩ Reiniciar</button>
+
 <!-- CONFIGURACIÓN -->
 <div id="setup">
-  <div class="setup-options">
-    <div class="setup-col">
-      <div class="setup-row">
-        <label>Número de jugadores</label>
-        <div class="btn-group" id="np-btns"></div>
-      </div>
-      <div class="setup-row">
-        <label>Dificultad</label>
-        <div class="btn-group" id="diff-btns"></div>
-      </div>
-      <div class="setup-row">
-        <label>Tema</label>
-        <div class="btn-group" id="topic-btns"></div>
-      </div>
-    </div>
+  <div class="setup-row">
+    <label>Número de jugadores</label>
+    <div class="btn-group" id="np-btns"></div>
+  </div>
+  <div class="setup-row">
+    <label>Dificultad</label>
+    <div class="btn-group" id="diff-btns"></div>
+  </div>
+  <div class="setup-row">
+    <label>Tema</label>
+    <div class="btn-group" id="topic-btns"></div>
+  </div>
+  <div class="setup-row">
+    <label>⏱ Tiempo por jugador</label>
+    <div class="btn-group" id="time-btns"></div>
   </div>
   <div class="setup-row">
     <label>Jugadores</label>
@@ -134,8 +160,14 @@ h1.game-title{font-size:22px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px
   <button class="start-btn" onclick="startGame()">¡Comenzar carrera! 🏁</button>
 </div>
 
-<!-- PISTA -->
+<!-- PANTALLA DE CARRERA -->
 <div id="race-screen">
+  <!-- Reloj -->
+  <div class="clock-bar">
+    <span class="clock-label">⏱ TIEMPO</span>
+    <div class="clock-display" id="clock-display">00:00</div>
+    <span class="clock-label" id="clock-label-right"></span>
+  </div>
   <div class="track-wrap">
     <div class="track-inner" id="track-inner">
       <div class="t-startline"></div>
@@ -146,21 +178,19 @@ h1.game-title{font-size:22px;font-weight:800;color:#1a3a6b;letter-spacing:-0.5px
   <div class="q-grid" id="q-grid"></div>
 </div>
 
-<!-- BOTÓN REINICIAR -->
-<button class="reset-top-btn" id="reset-top-btn" onclick="resetGame()">↩ Reiniciar</button>
-
 <!-- GANADOR -->
-<div id="winner-screen" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:1rem">
-  <div style="background:#fff;border-radius:20px;padding:2.5rem 2rem;max-width:480px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative;overflow:hidden">
-    <!-- Confeti decorativo -->
-    <div style="position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e,#3b82f6,#a855f7)"></div>
-    <div class="w-av" id="w-av" style="font-size:72px;animation:cel .7s ease-in-out infinite alternate;display:block;margin-bottom:.5rem">🏆</div>
-    <div style="font-size:13px;font-weight:700;color:#f59e0b;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">🎉 ¡Tenemos un ganador! 🎉</div>
-    <div id="w-title" style="font-size:30px;font-weight:900;color:#1a1a1a;margin:8px 0 6px;line-height:1.2"></div>
-    <div id="w-sub" style="font-size:14px;color:#666;margin-bottom:1.6rem"></div>
-    <div style="display:flex;gap:10px;justify-content:center">
-      <button class="again-btn" onclick="resetGame()" style="padding:11px 30px;background:#2563eb;color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer">Jugar de nuevo 🔄</button>
-    </div>
+<div id="winner-screen">
+  <div class="winner-card">
+    <div class="winner-rainbow"></div>
+    <div class="w-av" id="w-av">🏆</div>
+    <div class="w-congrats">🎉 ¡Felicitación! 🎉</div>
+    <div class="w-title" id="w-title"></div>
+    <div class="w-sub" id="w-sub"></div>
+    <table class="results-table" id="results-table">
+      <thead><tr><th>Jugador</th><th>Puntaje (/ 10)</th></tr></thead>
+      <tbody id="results-body"></tbody>
+    </table>
+    <button class="again-btn" onclick="resetGame()">Jugar de nuevo 🔄</button>
   </div>
 </div>
 
@@ -169,23 +199,32 @@ const AVATARS=['🚀','🦁','🐯','🦊','🐸','🤖','👾','🦄','🐙','�
 const COLORS=['#ef4444','#3b82f6','#22c55e','#f59e0b','#a855f7','#06b6d4'];
 const TRACK_LEN=10;
 const LABELS=['A','B','C','D'];
+
 const DIFFICULTIES={
   facil:{label:'Fácil',ops:['+','-'],max:20},
   medio:{label:'Medio',ops:['+','-','×'],max:50},
   dificil:{label:'Difícil',ops:['+','-','×','÷'],max:100}
 };
+
 const TOPICS_DEF={
   aritmetica:'Aritmética',
   fracciones:'Fracciones',
   geometria:'Geometría',
-  estadistica:'Estadística'
+  estadistica:'Estadística',
+  potencias:'Potencias',
+  radicacion:'Radicación'
 };
-let numPlayers=2,difficulty='facil',topic='aritmetica';
-let players=[],gameActive=false;
 
+const TIME_OPTIONS=[{label:'2 min',secs:120},{label:'3 min',secs:180},{label:'5 min',secs:300},{label:'10 min',secs:600}];
+
+let numPlayers=2, difficulty='facil', topic='aritmetica', timeLimit=120;
+let players=[], gameActive=false;
+let timerInterval=null, timeLeft=0;
+
+/* ══ SETUP ══ */
 function buildSetup(){
+  // Jugadores
   const npB=document.getElementById('np-btns');
-  // Solo 2 o 3 jugadores
   [2,3].forEach(n=>{
     const b=document.createElement('button');
     b.className='tog-btn'+(n===2?' active':'');
@@ -193,6 +232,7 @@ function buildSetup(){
     b.onclick=()=>{numPlayers=n;npB.querySelectorAll('.tog-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');buildNamesGrid();};
     npB.appendChild(b);
   });
+  // Dificultad
   const dfB=document.getElementById('diff-btns');
   Object.entries(DIFFICULTIES).forEach(([k,v],i)=>{
     const b=document.createElement('button');
@@ -201,6 +241,7 @@ function buildSetup(){
     b.onclick=()=>{difficulty=k;dfB.querySelectorAll('.tog-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');};
     dfB.appendChild(b);
   });
+  // Temas
   const tpB=document.getElementById('topic-btns');
   Object.entries(TOPICS_DEF).forEach(([k,v],i)=>{
     const b=document.createElement('button');
@@ -208,6 +249,15 @@ function buildSetup(){
     b.textContent=v;
     b.onclick=()=>{topic=k;tpB.querySelectorAll('.tog-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');};
     tpB.appendChild(b);
+  });
+  // Tiempo
+  const tmB=document.getElementById('time-btns');
+  TIME_OPTIONS.forEach((t,i)=>{
+    const b=document.createElement('button');
+    b.className='tog-btn'+(i===0?' active':'');
+    b.textContent=t.label;
+    b.onclick=()=>{timeLimit=t.secs;tmB.querySelectorAll('.tog-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');};
+    tmB.appendChild(b);
   });
   buildNamesGrid();
 }
@@ -217,7 +267,7 @@ function buildNamesGrid(){
   const old=[...g.querySelectorAll('input')].map(i=>i.value);
   g.innerHTML='';
   for(let i=0;i<numPlayers;i++){
-    const av=AVATARS[i];const col=COLORS[i];
+    const av=AVATARS[i],col=COLORS[i];
     const div=document.createElement('div');
     div.className='pcard';div.style.borderTopColor=col;
     div.innerHTML=`<div class="emoji-picker" id="epick-${i}"></div><input type="text" id="pname-${i}" placeholder="Jugador ${i+1}" value="${old[i]||''}"/>`;
@@ -233,11 +283,12 @@ function buildNamesGrid(){
   }
 }
 
+/* ══ GENERADORES DE PREGUNTAS ══ */
 function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
 function gcd(a,b){return b?gcd(b,a%b):a;}
 
-function genArith(diff){
-  const d=DIFFICULTIES[diff];
+function genArith(){
+  const d=DIFFICULTIES[difficulty];
   const op=d.ops[Math.floor(Math.random()*d.ops.length)];
   let a,b,ans;
   if(op==='÷'){b=rand(2,12);ans=rand(1,12);a=b*ans;}
@@ -280,11 +331,56 @@ function genEstat(){
   else if(t==='mediana'){const s=[...data].sort((a,b)=>a-b);ans=n%2===0?String((s[n/2-1]+s[n/2])/2):String(s[Math.floor(n/2)]);}
   else if(t==='moda'){const freq={};data.forEach(x=>freq[x]=(freq[x]||0)+1);ans=String(Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0]);}
   else{ans=String(Math.max(...data)-Math.min(...data));}
-  return{text:`Datos: [${data.join(', ')}]\n${t.charAt(0).toUpperCase()+t.slice(1)} = ?`,ans};
+  return{text:`Datos: [${data.join(', ')}]
+${t.charAt(0).toUpperCase()+t.slice(1)} = ?`,ans};
+}
+
+function genPotencias(){
+  const types=['calc','base','exp'];
+  const t=types[Math.floor(Math.random()*3)];
+  let text,ans;
+  if(t==='calc'){
+    const base=rand(2,9),exp=rand(2,4);
+    ans=String(Math.pow(base,exp));
+    text=`${base}^${exp} = ?`;
+  } else if(t==='base'){
+    const exp=rand(2,3),ans_n=rand(2,8);
+    const result=Math.pow(ans_n,exp);
+    text=`?^${exp} = ${result}`;ans=String(ans_n);
+  } else {
+    const base=rand(2,6),exp=rand(2,4);
+    const result=Math.pow(base,exp);
+    text=`${base}^? = ${result}`;ans=String(exp);
+  }
+  return{text,ans};
+}
+
+function genRadicacion(){
+  const types=['sqrt','cbrt','nth'];
+  const t=types[Math.floor(Math.random()*3)];
+  let text,ans;
+  if(t==='sqrt'){
+    const n=rand(2,12);ans=String(n);text=`√${n*n} = ?`;
+  } else if(t==='cbrt'){
+    const n=rand(2,6);ans=String(n);text=`∛${n*n*n} = ?`;
+  } else {
+    const idx=rand(2,4),base=rand(2,6);
+    const result=Math.pow(base,idx);
+    const sym=idx===2?'√':idx===3?'∛':'∜';
+    text=`${sym}${result} = ?`;ans=String(base);
+  }
+  return{text,ans};
 }
 
 function generateQuestion(){
-  const q=topic==='fracciones'?genFrac():topic==='geometria'?genGeo():topic==='estadistica'?genEstat():genArith(difficulty);
+  let q;
+  if(topic==='fracciones') q=genFrac();
+  else if(topic==='geometria') q=genGeo();
+  else if(topic==='estadistica') q=genEstat();
+  else if(topic==='potencias') q=genPotencias();
+  else if(topic==='radicacion') q=genRadicacion();
+  else q=genArith();
+
   const wrongs=new Set();
   while(wrongs.size<3){
     let w;
@@ -293,15 +389,53 @@ function generateQuestion(){
       if(parts.length>1){w=`${rand(1,9)}/${rand(2,9)}`;}
       else{w=String(parseInt(q.ans)+[-3,-2,-1,1,2,3,4,5][Math.floor(Math.random()*8)]);}
     } else {
-      const base=parseFloat(q.ans);
-      w=String(base+[-5,-4,-3,-2,-1,1,2,3,4,5][Math.floor(Math.random()*10)]);
+      const base=parseFloat(q.ans)||rand(1,20);
+      const delta=[-5,-4,-3,-2,-1,1,2,3,4,5][Math.floor(Math.random()*10)];
+      w=String(Math.max(0,base+delta));
     }
-    if(w!==q.ans)wrongs.add(w);
+    if(w!==String(q.ans)) wrongs.add(w);
   }
   const opts=[q.ans,...wrongs].sort(()=>Math.random()-.5);
   return{text:q.text,ans:LABELS[opts.indexOf(q.ans)],opts};
 }
 
+/* ══ TEMPORIZADOR ══ */
+function formatTime(s){
+  const m=Math.floor(s/60).toString().padStart(2,'0');
+  const ss=(s%60).toString().padStart(2,'0');
+  return `${m}:${ss}`;
+}
+
+function startTimer(){
+  timeLeft=timeLimit;
+  const display=document.getElementById('clock-display');
+  display.className='clock-display';
+  display.textContent=formatTime(timeLeft);
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    display.textContent=formatTime(timeLeft);
+    if(timeLeft<=30){display.className='clock-display warning';}
+    if(timeLeft<=10){display.className='clock-display danger';}
+    if(timeLeft<=0){
+      clearInterval(timerInterval);
+      timeExpired();
+    }
+  },1000);
+}
+
+function timeExpired(){
+  gameActive=false;
+  players.forEach((_,i)=>{
+    const opts=document.querySelectorAll(`#opts-${i} .opt-btn`);
+    opts.forEach(b=>b.disabled=true);
+  });
+  // Determine winner by position, then correct answers
+  const sorted=[...players].sort((a,b)=>b.pos-a.pos||b.correct-a.correct);
+  showWinner(players.indexOf(sorted[0]), true);
+}
+
+/* ══ JUEGO ══ */
 function startGame(){
   players=[];
   for(let i=0;i<numPlayers;i++){
@@ -312,7 +446,12 @@ function startGame(){
   document.getElementById('setup').style.display='none';
   document.getElementById('race-screen').style.display='block';
   document.getElementById('reset-top-btn').style.display='flex';
+  // Música
+  const bgm=document.getElementById('bgm');
+  bgm.volume=0.25;
+  bgm.play().catch(()=>{});
   buildTrack();buildQCards();gameActive=true;
+  startTimer();
   players.forEach((_,i)=>showQuestion(i));
 }
 
@@ -350,7 +489,7 @@ function buildQCards(){
 }
 
 function showQuestion(i){
-  if(!gameActive)return;
+  if(!gameActive) return;
   const q=generateQuestion();
   players[i].currentQ=q;players[i].answered=false;
   const card=document.getElementById(`qcard-${i}`);
@@ -375,7 +514,7 @@ function updateScore(i){
 }
 
 function handleAnswer(i,chosen){
-  if(!gameActive||players[i].answered)return;
+  if(!gameActive||players[i].answered) return;
   players[i].answered=true;
   const q=players[i].currentQ;
   const opts=document.getElementById(`opts-${i}`).querySelectorAll('.opt-btn');
@@ -395,7 +534,7 @@ function handleAnswer(i,chosen){
     runner.classList.add('bounce');
     setTimeout(()=>runner.classList.remove('bounce'),380);
     updateRunner(i);updateScore(i);
-    if(players[i].pos>=TRACK_LEN){showWinner(i);return;}
+    if(players[i].pos>=TRACK_LEN){clearInterval(timerInterval);showWinner(i,false);return;}
     setTimeout(()=>showQuestion(i),1600);
   } else {
     players[i].wrong++;players[i].pos=Math.max(0,players[i].pos-1);
@@ -411,21 +550,54 @@ function handleAnswer(i,chosen){
   }
 }
 
-function showWinner(idx){
+function showWinner(idx, byTime){
   gameActive=false;
+  clearInterval(timerInterval);
   document.getElementById('race-screen').style.display='none';
   document.getElementById('reset-top-btn').style.display='none';
+
+  // Detener música suavemente
+  const bgm=document.getElementById('bgm');
+  bgm.pause();
+
   const ws=document.getElementById('winner-screen');
   ws.style.display='flex';
+
   document.getElementById('w-av').textContent=players[idx].avatar;
-  document.getElementById('w-title').textContent=`¡${players[idx].name} ganó la carrera!`;
-  document.getElementById('w-sub').textContent=`Llegó a la meta con ${players[idx].correct} respuestas correctas y ${players[idx].wrong} incorrectas. ¡Felicitaciones!`;
+  document.getElementById('w-title').textContent=`¡Felicitación, ${players[idx].name}! 🥇`;
+  document.getElementById('w-sub').textContent=byTime
+    ? `¡Se acabó el tiempo! ${players[idx].name} lidera con ${players[idx].pos} paso${players[idx].pos!==1?'s':''}.`
+    : `¡Llegó a la meta primero con ${players[idx].correct} respuestas correctas!`;
+
+  // Tabla de resultados ordenada por posición desc
+  const sorted=[...players].sort((a,b)=>b.pos-a.pos||b.correct-a.correct);
+  const tbody=document.getElementById('results-body');
+  tbody.innerHTML='';
+  sorted.forEach((p,rank)=>{
+    const isWinner=(p===players[idx]);
+    const pct=Math.round((p.pos/TRACK_LEN)*100);
+    const tr=document.createElement('tr');
+    if(isWinner) tr.className='winner-row';
+    tr.innerHTML=`
+      <td><span style="font-size:18px">${p.avatar}</span> <strong>${p.name}</strong> ${isWinner?'🥇':rank===1?'🥈':'🥉'}</td>
+      <td>
+        <div class="score-bar-wrap">
+          <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%;background:${p.color}"></div></div>
+          <span class="score-num" style="color:${p.color}">${p.pos} / 10</span>
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
 }
 
 function resetGame(){
   gameActive=false;
+  clearInterval(timerInterval);
+  const bgm=document.getElementById('bgm');
+  bgm.pause();bgm.currentTime=0;
   document.getElementById('winner-screen').style.display='none';
   document.getElementById('race-screen').style.display='none';
+  document.getElementById('reset-top-btn').style.display='none';
   document.getElementById('setup').style.display='block';
 }
 
